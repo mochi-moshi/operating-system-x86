@@ -15,7 +15,7 @@ LFLAGS = -m elf_i386 --oformat binary -M
 
 .SILENT:
 
-build: reset_filetable bootcode font kernel_loader $(IMAGES)
+build: reset_filetable bootcode font kernel kernel_loader $(IMAGES)
 	python3 $(BUILD_DIR)/add_file.py -package
 	dd if=/dev/zero of=$(BIN_DIR)/image.bin bs=512 count=2880
 	dd if=$(BIN_DIR)/temp.bin of=$(BIN_DIR)/image.bin conv=notrunc
@@ -48,6 +48,12 @@ kernel_loader: $(K_INCLUDES)
 	$(CC) -c $(CFLAGS) -o $@.o $(SRC_DIR)/kernel_loader/$@.c -I$(SRC_DIR)/kernel_loader/includes
 	ld $(LFLAGS) -T$(LINK_DIR)/$@.ld $@.o $(K_INCLUDES:%=%.o) -o $(BIN_DIR)/$@.bin
 	# ld -m elf_i386 -T$(LINK_DIR)/$@.ld $@.o $(K_INCLUDES:%=%.o) -o $(BIN_DIR)/image.elf
+	python3 $(BUILD_DIR)/add_file.py $@.bin
+
+kernel: $(K_INCLUDES)
+	$(CC) -c $(CFLAGS) -o $@.o $(SRC_DIR)/kernel/$@.c -I$(SRC_DIR)/kernel_loader/includes
+	ld $(LFLAGS) -T$(LINK_DIR)/$@.ld $@.o $(K_INCLUDES:%=%.o) -o $(BIN_DIR)/$@.bin
+	ld -m elf_i386 -T$(LINK_DIR)/$@.ld $@.o $(K_INCLUDES:%=%.o) -o $(BIN_DIR)/image.elf
 	python3 $(BUILD_DIR)/add_file.py $@.bin
 
 .PHONY: clean run reset_filetable
