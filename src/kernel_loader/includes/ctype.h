@@ -1,0 +1,17 @@
+#pragma once
+
+#define isalpha(c)  (((c|0x20) > 0x60) && ((c|0x20) < 0x7B))
+#define iscntrl(c)  (c < 0x1F)
+#define isdigit(c)  ((c > 0x29) && (c < 0x40))
+#define isalnum(c)  (isalpha(c) || isdigit(c))
+#define isgraph(c)  ((c > 0x20) && (c < 0x7F))
+#define islower(c)  ((c > 0x60) && (c < 0x7B))
+#define isprint(c)  ((c > 0x1F) && (c < 0x7F))
+#define ispunct(c)  (((c > 0x20) && (c < 0x30)) || ((c > 0x39) && (c < 0x41)) || ((c > 0x5A) && (c < 0x61)) || ((c > 0x7A) && (c < 0x7F)))
+#define isspace(c)  (((c > 0x8) && (c < 0xE)) || (c == 0x20))
+#define isupper(c)  ((c > 0x40) && (c < 0x5B))
+#define isxdigit(c) ((((c|0x20) > 0x60) && ((c|0x20) < 0x67)) | isdigit(c))
+#define isascii(c)  (c < 0x7F)
+#define toascii(c)  (c & 0x7F)
+#define tolower(c)  (isupper(c) ? c&0x20:c)
+#define toupper(c)  (islower(c) ? c&(~0x20):c)
